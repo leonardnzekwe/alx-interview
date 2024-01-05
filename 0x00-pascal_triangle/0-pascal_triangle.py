@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-Paschal Triangle Module
-"""
+"""Paschal Triangle Module"""
 
 
 def pascal_triangle(n):
@@ -12,6 +10,8 @@ def pascal_triangle(n):
             row = [1] * (i + 1)
             if i >= 2:
                 for j in range(1, i):
-                    row[j] = triangle_list[i - 1][j - 1] + triangle_list[i - 1][j]
+                    row[j] = (
+                        triangle_list[i - 1][j - 1] + triangle_list[i - 1][j]
+                    )
             triangle_list.append(row)
     return triangle_list
