@@ -21,29 +21,32 @@ def validUTF8(data: List[int]) -> bool:
     # Iterate through each byte in the data
     for byte in data:
         # Convert the byte to binary and make sure it's 8 bits long
-        binary_representation = bin(byte)[2:].zfill(8)
+        binary_representation = bin(byte)[2:].zfill(8)[-8:]
 
         # Check the first few bits to determine the type of character
         if binary_representation.startswith("0") and remaining_bytes == 0:
             # Single-byte character (ASCII)
             continue
-        elif binary_representation.startswith("110") and remaining_bytes == 0:
+        if binary_representation.startswith("110") and remaining_bytes == 0:
             # Start of a 2-byte character
             remaining_bytes = 1
-        elif binary_representation.startswith("1110") and remaining_bytes == 0:
+            continue
+        if binary_representation.startswith("1110") and remaining_bytes == 0:
             # Start of a 3-byte character
             remaining_bytes = 2
-        elif (
+            continue
+        if (
             binary_representation.startswith("11110") and remaining_bytes == 0
           ):
             # Start of a 4-byte character
             remaining_bytes = 3
-        elif binary_representation.startswith("10") and remaining_bytes > 0:
+            continue
+        if binary_representation.startswith("10") and remaining_bytes > 0:
             # Continuation byte
             remaining_bytes -= 1
-        else:
-            # Invalid starting bits for a character
-            return False
+            continue
+        # Invalid starting bits for a character
+        return False
 
     # If we've processed all bytes and
     # the remaining_bytes is 0, it's valid UTF-8
