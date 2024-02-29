@@ -13,18 +13,26 @@ def makeChange(coins, total):
     Returns:
         The fewest number of coins needed to meet the total
     """
-    if total < 1:
+    if total <= 0:  # If the total amount is 0 or less,
         return 0
 
-    # Initialize a list to store the fewest
-    # number of coins needed for each amount
-    dp = [float("inf")] * (total + 1)
-    dp[0] = 0
+    coins.sort(reverse=True)  # Sort the coins in descending order
 
-    # Calculate the fewest number of coins for each amount from 1 to total
-    for amount in range(1, total + 1):
-        for coin in coins:
-            if coin <= amount:
-                dp[amount] = min(dp[amount], dp[amount - coin] + 1)
+    change = 0  # Variable to keep track of the number of coins used for change
 
-    return dp[total] if dp[total] != float("inf") else -1
+    for coin in coins:  # Iterate through each coin value
+        if total <= 0:  # If the total amount is already met, exit the loop
+            break
+
+        temp = (
+            total // coin
+        )  # Calculate the max number of coins of this value that can be used
+        change += temp  # Add the number of coins used to the change count
+        total -= (
+            temp * coin
+        )  # Subtract the value of the coins used from the total amount
+
+    if total != 0:  # If the total amount is not completely met, return -1
+        return -1
+
+    return change  # Return the total number of coins used for change
