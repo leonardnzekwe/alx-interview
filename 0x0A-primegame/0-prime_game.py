@@ -3,69 +3,48 @@
 
 
 def isWinner(x, nums):
-    """
-    Determines the winner of each game in a
-    list of games with a list of numbers.
+    """ # noqa
+    Determines the winner of the game of primes between Maria and Ben
+    based on the number of primes in the list of numbers provided as input.
 
     Args:
-    - x (int): The number of rounds.
-    - nums (List[int]): A list of integers representing
-    the upper bounds for each game.
+        x (int): The number of rounds.
+        nums (list of int): List of integers representing the numbers in each round.
 
     Returns:
-    - str or None: The name of the player who won the most rounds.
-                   If the winner cannot be determined, returns None.
+        str or None: The name of the winner, or None if there's no clear winner.
+                     If Maria wins, returns 'Maria'. If Ben wins, returns 'Ben'.
 
-    The winner is the first player to remove all prime numbers from the list.
-    If the number of prime numbers is even, Ben wins.
-    If the number of prime numbers is odd, Maria wins.
-    If there are no prime numbers, the game is a draw.
+    Notes:
+        - If the input list is empty or the number of rounds is less than 1, returns None.
+        - The winner is determined by the player who wins the most rounds. If both players win an equal number of rounds, the function returns None.
+        - The function assumes that the input list contains only positive integers.
+
+    Example:
+        >>> isWinner(3, [1, 5, 10])
+        'Ben'
     """
-
-    def calculate_primes(n):
-        """
-        Calculates prime numbers up to a given number n
-        using the Sieve of Eratosthenes algorithm.
-
-        Args:
-        - n (int): The upper limit to generate prime numbers up to.
-
-        Returns:
-        - List[int]: A list of prime numbers up to n.
-        """
-        primes = [True] * (n + 1)
-        primes[0] = primes[1] = False
-        for i in range(2, int(n**0.5) + 1):
-            if primes[i]:
-                for j in range(i * i, n + 1, i):
-                    primes[j] = False
-        return [i for i in range(n + 1) if primes[i]]
-
-    def play_game(n):
-        """
-        Simulates a single round of the game for a given upper bound.
-
-        Args:
-        - n (int): The upper bound for the current game.
-
-        Returns:
-        - str: The name of the winner ('Maria' or 'Ben').
-        """
-        primes = calculate_primes(n)
-        num_primes = len(primes)
-        if num_primes % 2 == 0:
-            return "Ben"
-        else:
-            return "Maria"
-
-    results = {"Maria": 0, "Ben": 0}
-
-    for i in range(x):
-        winner = play_game(nums[i])
-        results[winner] += 1
-
-    max_wins = max(results.values())
-    if max_wins == 0 or results["Maria"] == results["Ben"]:
+    if not nums or x < 1:
         return None
-    else:
-        return max(results, key=results.get)
+    max_num = max(nums)
+
+    my_filter = [True for _ in range(max(max_num + 1, 2))]
+    for i in range(2, int(pow(max_num, 0.5)) + 1):
+        if not my_filter[i]:
+            continue
+        for j in range(i * i, max_num + 1, i):
+            my_filter[j] = False
+    my_filter[0] = my_filter[1] = False
+    y = 0
+    for i in range(len(my_filter)):
+        if my_filter[i]:
+            y += 1
+        my_filter[i] = y
+    player1 = 0
+    for x in nums:
+        player1 += my_filter[x] % 2 == 1
+    if player1 * 2 == len(nums):
+        return None
+    if player1 * 2 > len(nums):
+        return "Maria"
+    return "Ben"
