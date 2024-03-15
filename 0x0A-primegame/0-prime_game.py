@@ -2,7 +2,7 @@
 """Prime Game Module"""
 
 
-def isWinner(x: int, nums: list) -> str | None:
+def isWinner(x, nums):
     """
     Determines the winner of each game in a
     list of games with a list of numbers.
@@ -22,7 +22,7 @@ def isWinner(x: int, nums: list) -> str | None:
     If there are no prime numbers, the game is a draw.
     """
 
-    def calculate_primes(n: int) -> list:
+    def calculate_primes(n):
         """
         Calculates prime numbers up to a given number n
         using the Sieve of Eratosthenes algorithm.
@@ -41,7 +41,7 @@ def isWinner(x: int, nums: list) -> str | None:
                     primes[j] = False
         return [i for i in range(n + 1) if primes[i]]
 
-    def play_game(n: int) -> str:
+    def play_game(n):
         """
         Simulates a single round of the game for a given upper bound.
 
